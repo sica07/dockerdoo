@@ -1,0 +1,28 @@
+html 
+    block head
+    head
+        title  Docker wii
+        link(href='https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/uikit.almost-flat.min.css', rel='stylesheet')
+        link(href='css/main.css', rel='stylesheet')
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/core/core.min.js")
+
+    block body
+    body
+        block title
+        h1  Docker wii
+
+        block menu
+        h2 Containers
+        a(href='/containers', class='uk-button uk-button-primary') List Runnnig 
+        a(href='/containers?all=1', class='uk-button uk-button-primary') List all 
+
+        h2 Images
+        a(href='/images', class='uk-button uk-button-primary') List 
+        a(href='/containers?all=1', class='uk-button uk-button-primary') List all 
+
+        hr
+
+        block content
+        block footer
+        script(src="js/main.js")

@@ -1,0 +1,58 @@
+    extends layout.pug
+    if containers
+        h3 Your System
+        table(class="uk-table")
+            caption=containers.SystemTime
+            thead
+                tr
+                    th OS
+                    th Kernel
+                    th CPUs
+                    th Memory
+                    th Architecture
+            tbody
+                tr
+                td=containers.OperatingSystem
+                td=containers.KernelVersion
+                td=containers.NCPU
+                td=containers.MemTotal/1000000 + 'MB'
+                td=containers.Architecture
+
+        h3 Docker env.
+        table(class="uk-table")
+            caption='Docker v. ' + containers.ServerVersion
+            thead
+                tr
+                    th Driver
+                    th RootDir
+                    th Experimental
+                    th Security
+                    th Debug
+            tbody
+                tr
+                td=containers.Driver
+                td=containers.DockerRootDir
+                td=containers.ExperimentaBuild
+                td=containers.SecurityOptions
+                td=containers.Debug
+
+        h3 Docker 
+        table(class="uk-table")
+            caption=containers.ID
+            thead
+                tr
+                    th Active Containers
+                    th Paused Containers
+                    th Stopped Containers
+                    th Total Containers
+                    th Total Images
+            tbody
+                tr
+                td=containers.ContainersRunning
+                td=containers.ContainersPaused
+                td=containers.ContainersStopped
+                td=containers.Containers
+                td=containers.Images
+
+
+

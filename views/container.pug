@@ -1,0 +1,49 @@
+extends layout.pug
+block content
+    if container.length === 0
+        div(class="uk-grid")
+            div(class="uk-width-medium-1-5 uk-container-center uk-panel uk-panel-box uk-panel-box-primary") We couldn't retrieve the container info
+    else
+    div(class="uk-grid")
+            div(class="uk-width-8-10 uk-container-center")
+                div(class="uk-panel uk-panel-box uk-panel-box-hover")
+                    if container.State.Status == 'running'
+                        div(class="uk-panel-badge uk-badge uk-badge-success")="Running since "+container.State.StartedAt
+                    else
+                        div(class="uk-panel-badge uk-badge uk-badge-danger")="Stopped at "+container.State.FinishedAt
+                    h1(class="uk-panel-title")=container.Name
+
+                    li='ID: ' + container.Id
+                    li='Image: '+container.Image
+                    li='Command: '+container.Command
+                    li='Created: '+ container.Created
+                    li='Driver: '+ container.Driver
+
+                    div(class='slide-down')
+                        h4 Paths
+                        li='Path: '+ container.Path
+                        li='Hostname path: '+ container.HostnamePath
+                        li='Hosts path: '+ container.HostsPath
+                        li='Log path: '+ container.LogPath
+                        li='ResolvConf path: '+ container.ResolvConfPath
+
+                        h4 Host(s)
+                        each host, hosti in container.HostConfig
+                            li=hosti+'=>'+host
+
+                        h4 Networks(s)
+                        each net, neti in container.NetworkSettings
+                            li=neti+'=>'+net
+                        each n,i in container.NetworkSettings.Networks
+                            li=i+'=>'+n
+                        h4 Mount(s)
+                        each mount, mounti in container.Mounts
+                            each val,i in mount
+                                li=i+'=>'+val
+                            hr
+                        h4 Config
+                        each label, labeli in container.Config
+                                li=labeli+'=>'+label
+                        h4 State
+                        each label, labeli in container.State
+                                li=labeli+'=>'+label

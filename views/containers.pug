@@ -1,0 +1,48 @@
+extends layout.pug
+block content
+    if containers.length === 0
+        div(class="uk-grid")
+            div(class="uk-width-medium-1-5 uk-container-center uk-panel uk-panel-box uk-panel-box-primary") There are no containers running or build
+    else
+    div(class="uk-grid")
+        each val,index in containers
+            div(class="uk-width-2-6")
+                div(class="uk-panel uk-panel-box uk-panel-box-hover")
+                    if val.State == 'running'
+                        div(class="uk-panel-badge uk-badge uk-badge-success")=val.Status
+                    else
+                        div(class="uk-panel-badge uk-badge uk-badge-danger")=val.Status
+                    h3(class="uk-panel-title")
+                        a(href="/container"+val.Names)=val.Names
+
+                    li='ID: ' + val.Id
+                    li='Image: '+val.Image
+                    li='Command: '+val.Command
+                    li='Size: '+val.SizeRootFs/1000000+'MB'
+                    li='Created: '+ new Date(val.Created*1000)
+                    #li='Created: '+ val.Created
+
+                    button(class="slide-down-button uk-button uk-button-warning") Details
+
+                    div(class='slide-down')
+                        h4 Host(s)
+                        each host, hosti in val.HostConfig
+                            li=hosti+'=>'+host
+
+                        each net, neti in val.NetworkSettings.Networks 
+                            b=neti
+                            each n,i in net
+                                li=i+'=>'+n
+                        h4 Port(s)
+                        each port, porti in val.Ports
+                            each val,i in port
+                                li=i+'=>'+val
+                            hr
+                        h4 Mount(s)
+                        each mount, mounti in val.Mounts
+                            each val,i in mount
+                                li=i+'=>'+val
+                            hr
+                        h4 Labels(s)
+                        each label, labeli in val.Labels
+                                li=labeli+'=>'+label
