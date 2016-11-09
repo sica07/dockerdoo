@@ -1,0 +1,48 @@
+extends layout.pug
+block content
+    div(class="row")
+        div(class="col-md-3")
+            h3 Summary
+            div(class="panel panel-default bg-gray-darker")
+                div(class="panel-body")
+                    div(class="row")
+                        div(class="col-lg-12 col-md-12 col-sm-12 col-xs-12")
+                            p(class="m-b-0 m-t-0 text-gray-lighter") Total Containers
+                            h1(class="f-w-300 display-3 m-t-0")=containers.Containers
+
+                        div(class="col-lg-12 col-md-3 col-sm-3 col-xs-6")
+                            p(class="m-b-0 m-t-0 text-gray-lighter") Containers Running
+                            h1(class="f-w-300 m-t-0")=containers.ContainersRunning
+
+                        div(class="col-lg-12 col-md-3 col-sm-3 col-xs-6")
+                            p(class="m-b-0 m-t-0 text-gray-lighter") Stopped Containers
+                            h1(class="f-w-300 m-t-0")=containers.ContainersStopped
+
+                        div(class="col-lg-12 col-md-3 col-sm-3 col-xs-6")
+                            p(class="m-b-0 m-t-0 text-gray-lighter") Paused Containers
+                            h1(class="f-w-300 m-t-0")=containers.ContainersPaused
+        div(class="col-md-9")
+            h3 Actions
+            div(class="row")
+                div(class="col-md-12")
+                   button(class="btn btn-default ",id="compose-start",type="button") 
+                       i(class="fa fa-play-circle text-success")
+                       span  Start
+                   button(class="btn btn-default ",id="compose-stop",type="button") 
+                       i(class="fa fa-stop-circle text-danger")
+                       span  Stop
+                   button(class="btn btn-default ", id="compose-restart",type="button") 
+                       i(class="fa fa-refresh text-primary")
+                       span  Restart
+                   button(class="btn btn-default ", id="compose-pause",type="button") 
+                       i(class="fa fa-pause-circle text-warning")
+                       span  Pause
+                   button(class="btn btn-default " ,id="compose-unpause",type="button") 
+                       i(class="fa fa-pause-circle-o text-info")
+                       span  Unpause
+            hr
+            div(class="row")
+                div(class="col-lg-12")
+                   div(class="panel panel-default", id="terminal")
+                       if terminal
+                       pre=terminal

@@ -3,27 +3,44 @@ var app = express()
 app.use(express.static('public'))
 var Curl = require( 'node-libcurl' ).Curl;
 app.set('view engine', 'pug')
+app.db = {
+    containers: {},
+};
 
 const spawn = require( 'child_process' ).exec;
 
-app.get('/ls', function(req, res){
-    res.set('Content-Type', 'text/plain');
-    //cmd = spawn( 'cd', [ '/home/marius/Templates/fsp_docker'] );
-    spawn( 'docker-compose ps', {cwd: '/home/marius/Templates/fsp_docker'}, function(err, stdout, stderr){
-        if(err) { res.send(err); }
-        res.send(stdout);
-        res.send(stderr);
+app.get('/compose', function(req, res){
+    spawn('docker-compose ps', {cwd: '/home/marius/Templates/fsp_docker'}, function(err, stdout, stderr){
+        if(err) { res.render('compose.pug', {terminal: err}); }
+        if(stdout){
+            res.render('compose.pug', {terminal: stdout, containers: app.db.containers});
+        } else {
+            res.render('compose.pug', {terminal: stderr, containers: app.db.containers});
+        }
+    })
+})
 
+app.post('/compose/:action', function(req, res){
+    res.set('Content-Type', 'text/plain');
+    var action = req.params.action;
+    spawn( 'docker-compose '+action, {cwd: '/home/marius/Templates/fsp_docker'}, function(err, stdout, stderr){
+        if(err) { res.send(err); }
+        if(stdout){
+            res.send(stdout);
+        } else {
+            res.send(stderr);
+        }
     });
 
 });
+
 var net = require('net');
 
 
 app.get('/container/:name', function(req, res){
     var name = req.params.name;
     var client = net.connect("/var/run/docker.sock");
-        client.write('GET /containers/'+name+'/json HTTP/1.0\r\n\r\n');
+    client.write('GET /containers/'+name+'/json HTTP/1.0\r\n\r\n');
     client.on("data", function(data) {
         var info = bufferToJSON(data);
         res.render('container.pug', {container: info})
@@ -55,6 +72,7 @@ app.get('/', function(req, res){
     client.write('GET /info HTTP/1.0\r\n\r\n');
     client.on("data", function(data) {
         var info = bufferToJSON(data);
+        app.db.containers = info
         res.render('index.pug', {containers: info})
     })
     client.on('error', function(err){

@@ -1,59 +1,96 @@
 extends layout.pug
 block content
     if containers
-    h3 Your System
-    table(class="uk-table")
-        caption=containers.SystemTime
-        thead
-            tr
-                th OS
-                th Kernel
-                th CPUs
-                th Memory
-                th Architecture
-        tbody
-            tr
-            td=containers.OperatingSystem
-            td=containers.KernelVersion
-            td=containers.NCPU
-            td=containers.MemTotal/1000000 + 'MB'
-            td=containers.Architecture
+        div(class="row")
+            div(class="col-lg-12")
+                h3 Containers
+                div(class="row")
+                    div(class="col-lg-3 col-md-4")
+                       div(class="panel panel-default bg-gray-dark bg-success-i") 
+                           div(class="panel-heading") Active containers
+                           div(class="panel-body text-center") 
+                               h1=containers.ContainersRunning
+                           div(class="panel-footer text-center") 
+                               a(href="/containers" class="text-muted") 
+                                   span See all 
+                                       i(class="fa fa-angle-right")
+                    div(class="col-lg-3 col-md-4")
+                       div(class="panel panel-default bg-gray-dark bg-danger-i") 
+                           div(class="panel-heading") Stopped containers
+                           div(class="panel-body text-center") 
+                               h1=containers.ContainersStopped
+                           div(class="panel-footer text-center") 
+                               a(href="/containers?all=1" class="text-muted") 
+                                   span See all 
+                                       i(class="fa fa-angle-right")
+                    div(class="col-lg-3 col-md-4")
+                       div(class="panel panel-default bg-gray-dark bg-warning-i") 
+                           div(class="panel-heading") Paused containers
+                           div(class="panel-body text-center") 
+                               h1=containers.ContainersPaused
+                           div(class="panel-footer text-center") 
+                               a(href="/containers?all=1" class="text-muted") 
+                                   span See all 
+                                       i(class="fa fa-angle-right")
 
-    h3 Docker env.
-    table(class="uk-table")
-        caption='Docker v. ' + containers.ServerVersion
-        thead
-            tr
-                th Driver
-                th RootDir
-                th Experimental
-                th Security
-                th Debug
-        tbody
-            tr
-            td=containers.Driver
-            td=containers.DockerRootDir
-            td=containers.ExperimentaBuild
-            td=containers.SecurityOptions
-            td=containers.Debug
-
-    h3 Docker 
-    table(class="uk-table")
-        caption=containers.ID
-        thead
-            tr
-                th Active Containers
-                th Paused Containers
-                th Stopped Containers
-                th Total Containers
-                th Total Images
-        tbody
-            tr
-            td=containers.ContainersRunning
-            td=containers.ContainersPaused
-            td=containers.ContainersStopped
-            td=containers.Containers
-            td=containers.Images
-
-
-
+                            
+                            
+                    div(class="col-lg-3 col-md-4")
+                       div(class="panel panel-default bg-gray-dark bg-primary-i") 
+                           div(class="panel-heading") All containers
+                           div(class="panel-body text-center") 
+                               h1=containers.Containers
+                           div(class="panel-footer text-center") 
+                               a(href="/containers?all=1" class="text-muted") 
+                                   span See all 
+                                       i(class="fa fa-angle-right")
+                div(class="row")
+                    div(class="col-md-4")
+                       h3 System
+                       div(class="panel panel-default") 
+                               table(class="table table-condensed table-striped")
+                                   tbody
+                                       tr
+                                           td Operating System
+                                           td(class="text-right text-white")=containers.OperatingSystem
+                                       tr
+                                           td Kernel
+                                           td(class="text-right text-white")=containers.KernelVersion
+                                       tr
+                                           td CPUs
+                                           td(class="text-right text-white")=containers.NCPU
+                                       tr
+                                           td Memory (RAM)
+                                           td(class="text-right text-white")=containers.MemTotal/1000000 + 'MB'
+                                       tr
+                                           td Architecture
+                                           td(class="text-right text-white")=containers.Architecture 
+                    div(class="col-md-4")
+                       h3 Docker 
+                       div(class="panel panel-default") 
+                               table(class="table table-condensed table-striped")
+                                   tbody
+                                       tr
+                                           td Version
+                                           td(class="text-right text-white")=containers.ServerVersion
+                                       tr
+                                           td Driver
+                                           td(class="text-right text-white")=containers.Driver
+                                       tr
+                                           td Root Directory
+                                           td(class="text-right text-white")=containers.DockerRootDir
+                                       tr
+                                           td Security Options
+                                           td(class="text-right text-white")=containers.SecurityOptions
+                                       tr
+                                           td Debug enabled
+                                           td(class="text-right text-white")=containers.Debug
+                    div(class="col-md-4")
+                       h3 Images
+                       div(class="panel panel-default bg-gray-dark") 
+                           div(class="panel-body text-center") 
+                               h1=containers.Images
+                           div(class="panel-footer text-center") 
+                               a(href="/images" class="text-muted") 
+                                   span See all 
+                                       i(class="fa fa-angle-right")

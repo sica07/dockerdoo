@@ -1,1 +1,4 @@
 .slide-down { display: none; }
+table {font-size: inherit}
+#terminal {min-height: 300px}
+.btn { margin: 2px; }
