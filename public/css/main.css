@@ -3,3 +3,6 @@ table {font-size: inherit}
 #terminal {min-height: 300px}
 .btn { margin: 2px; }
 .navbar-brand > span { font-size:2.2em; font-family: Verdana, sans-serif}
+.no-padding {padding:0 !important}
+.no-margin {margin:0 !important}
+.label.label-outline {line-height: 2em;}

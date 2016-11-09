@@ -1,8 +1,19 @@
 $(document).ready(function(){
     setActiveMenu();
+    $("#make-sidebar-slim").click(function(){
+        var $body = $('body');
+        var $icon = $(this).children('i');
+        if($body.hasClass('sidebar-slim')) {
+            $body.removeClass('sidebar-slim');
+            $icon.removeClass('fa-chevron-right').addClass('fa-chevron-left');
+        } else {
+            $body.addClass('sidebar-slim');
+            $icon.addClass('fa-chevron-right').removeClass('fa-chevron-left');
+        }
+    });
     $(".slide-down-button").click(function(){
-        console.log($(this).siblings('.slide-down-button'))
-        $(this).siblings('.slide-down').toggle();
+        var $el =$(this).parent('td').parent('tr').next('.slide-down');
+            $el.toggle('slow');
     });
     $("#compose-stop").click(function(){
         $("#terminal").html('<pre>Stopping the services...</pre>');
@@ -17,9 +28,8 @@ $(document).ready(function(){
             error: function(err){
                 notify('An error occured. Please try again.', 0);
             }
-
-        })
-    })
+        });
+    });
 
     $("#compose-start").click(function(){
         $("#terminal").html('<pre>Starting the services...</pre>');
@@ -34,9 +44,8 @@ $(document).ready(function(){
             error: function(err){
                 notify('An error occured. Please try again.', 0);
             }
-
-        })
-    })
+        });
+    });
     $("#compose-restart").click(function(){
         $("#terminal").html('<pre>restarting the services...</pre>');
         $.ajax({
@@ -51,8 +60,8 @@ $(document).ready(function(){
                 notify('An error occured. Please try again.', 0);
             }
 
-        })
-    })
+        });
+    });
     $("#compose-pause").click(function(){
         $("#terminal").html('<pre>Pauseing the services...</pre>');
         $.ajax({
@@ -67,8 +76,8 @@ $(document).ready(function(){
                 notify('An error occured. Please try again.', 0);
             }
 
-        })
-    })
+        });
+    });
     $("#compose-unpause").click(function(){
         $("#terminal").html('<pre>Unpauseing the services...</pre>');
         $.ajax({
@@ -83,25 +92,13 @@ $(document).ready(function(){
                 notify('An error occured. Please try again.', 0);
             }
 
-        })
-    })
-
-
-
-})
+        });
+    });
+});
 function setActiveMenu(){
     var path = window.location.pathname.split('/');
-    $(".primary-submenu.active").removeClass('active')
+    $(".primary-submenu.active").removeClass('active');
     $("#menu-"+path[1]).addClass('active');
-    switch (path[1]) {
-        case 'compose':
-            $("")
-
-            break;
-
-        default:
-
-    }
 }
 function getComposeStatus(){
         $.ajax({
@@ -110,33 +107,32 @@ function getComposeStatus(){
             success: function(data){
                 setTimeout(function(){
                     $("#terminal").html('<pre>'+data+'</pre>');
-                }, 2000)
+                }, 2000);
             },
             error: function(err){
                 notify('An error occured. Please try again.', 0);
             }
 
-        })
+        });
 }
 function notify(txt,type) {
     switch (type) {
         case 1:
             classType = 'alert-success';
-            iconType = '<span class="fa-stack fa-lg m-r-1"> <i class="fa fa-circle-thin fa-stack-2x text-success"></i> <i class="fa fa-check fa-stack-1x text-success"></i> </span>'
+            iconType = '<span class="fa-stack fa-lg m-r-1"> <i class="fa fa-circle-thin fa-stack-2x text-success"></i> <i class="fa fa-check fa-stack-1x text-success"></i> </span>';
             break;
         case 0:
             classType = 'alert-danger';
-            iconType = '<span class="fa-stack fa-lg m-r-1"> <i class="fa fa-circle-thin fa-stack-2x text-danger"></i> <i class="fa fa-close fa-stack-1x text-danger"></i> </span>'
+            iconType = '<span class="fa-stack fa-lg m-r-1"> <i class="fa fa-circle-thin fa-stack-2x text-danger"></i> <i class="fa fa-close fa-stack-1x text-danger"></i> </span>';
             break;
 
         default:
             classType = 'alert-info';
-            iconType = '<span class="fa-stack fa-lg m-r-1"> <i class="fa fa-circle-thin fa-stack-2x text-primary"></i> <i class="fa fa-info fa-stack-1x text-primary"></i> </span>'
+            iconType = '<span class="fa-stack fa-lg m-r-1"> <i class="fa fa-circle-thin fa-stack-2x text-primary"></i> <i class="fa fa-info fa-stack-1x text-primary"></i> </span>';
 
     }
     var html='<div class="alert'+classType+'" role="alert" id="notify">';
     html += '<button type="button" onclick="javascript:$(\"#notify\#).remove()" class="close text-gray-darker" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>';
     html += iconType;
     html += txt + '</div>';
-    $("body")
 }

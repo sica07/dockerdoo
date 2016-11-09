@@ -28,9 +28,17 @@ html
                             a(href="/") 
                                 i(class="fa fa-home fa-lg")
                                 span(class="nav-label") General Info
+                        li(class="primary-submenu", id="menu-containers") 
+                            a(href="/containers")
+                                i(class="fa fa-columns fa-lg")
+                                span(class="nav-label") Containers 
+                        li(class="primary-submenu", id="menu-containers") 
+                            a(href="/images")
+                                i(class="fa fa-window-maximize fa-lg")
+                                span(class="nav-label") Images 
                         li(class="primary-submenu", id="menu-compose") 
                             a(href="/compose")
-                                i(class="fa fa-th-list fa-lg")
+                                i(class="fa fa-sitemap fa-lg")
                                 span(class="nav-label") Docker Compose 
                         li(class="primary-submenu") 
                             a 
@@ -41,9 +49,10 @@ html
                         li 
                             a 
                                 span(class="nav-label") Test
-                        li 
-                            a 
-                                span(class="nav-label") Test
+                        li(class="primary-submenu") 
+                            a(href="javascript:void(0)", id="make-sidebar-slim") 
+                                i(class="fa fa-chevron-left fa-lg")
+                                span(class="nav-label") slim menu bar
         div(class="content")
             block title
             div(class="sub-navbar bg-gray-darker")

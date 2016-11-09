@@ -1,48 +1,152 @@
 extends layout.pug
 block content
-    if containers.length === 0
-        div(class="uk-grid")
-            div(class="uk-width-medium-1-5 uk-container-center uk-panel uk-panel-box uk-panel-box-primary") There are no containers running or build
-    else
-    div(class="uk-grid")
-        each val,index in containers
-            div(class="uk-width-2-6")
-                div(class="uk-panel uk-panel-box uk-panel-box-hover")
-                    if val.State == 'running'
-                        div(class="uk-panel-badge uk-badge uk-badge-success")=val.Status
-                    else
-                        div(class="uk-panel-badge uk-badge uk-badge-danger")=val.Status
-                    h3(class="uk-panel-title")
-                        a(href="/container"+val.Names)=val.Names
+    div(class="row")
+        div(class="col-md-12")
+            if containers.length === 0
+                div(class="alert alert-info" role="alert")
+                    span(class="fa-stack fa-lg")
+                      i(class="fa fa-circle-thin fa-stack-2x text-primary")
+                      i(class="fa fa-info fa-stack-1x text-primary")
+                    span There are no containers running or build
+            else
+                table(class="table table-responsive")
+                    thead
+                        tr
+                            th
+                            th Name
+                            th Id
+                            th Image
+                            th Command
+                            th Size
+                            th Created
+                            th Status
+                            th
+                    tbody
+                        each val,index in containers
+                            tr
+                                td(style="padding-top:.9em;")
+                                    if val.State == 'running'
+                                        i(class="fa fa-circle text-success")
+                                    else
+                                        i(class="fa fa-circle text-danger")
+                                td
+                                    a(href="/container"+val.Names)=val.Names
+                                td
+                                    span(class="label-gray-lighter label label-outline")=val.Id.substring(0,6)
+                                td=val.Image
+                                td=val.Command
+                                - var size = Math.round(val.SizeRootFs/1000000)+'MB'
+                                td=size
+                                - var date = new Date(val.Created*1000) + ''
+                                td=date.substring(4,24)
+                                td
+                                    if val.State == 'running'
+                                        span(class="label label-outline label-success small")=val.Status
+                                    else
+                                        span(class="label label-outline label-danger small")=val.Status
+                                td
+                                    button(class="slide-down-button btn btn-default btn-xs") Details
+                            tr(class='slide-down no-bg')
+                                td(colspan=2)
+                                    div(class="panel panel-default no-padding bg-gray")
+                                        div(class="panel-heading") Network(s)
+                                        div(class="panel-body  no-padding")
+                                            table(class="table no-margin")
+                                                thead
+                                                    tr
+                                                    th(class="text-uppercase small") Description
+                                                    th(class="text-uppercase text-right small") Value
+                                                tbody
+                                                    each net, neti in val.NetworkSettings.Networks 
+                                                        tr
+                                                            td Network
+                                                            td(class="text-white text-right")=neti
+                                                        tr
+                                                            td NetworkID
+                                                            td(class="text-white text-right")=net.NetworkID.substring(0,6)
+                                                        tr
+                                                            td MAC
+                                                            td(class="text-white text-right")=net.MacAddress
+                                                        tr
+                                                            td Gateway
+                                                            td(class="text-white text-right")=net.Gateway
+                                                        tr
+                                                            td IP
+                                                            td(class="text-white text-right")=net.IPAddress
+                                td
+                                    div(class="panel panel-default no-padding bg-gray")
+                                        div(class="panel-heading") Port(s)
+                                        div(class="panel-body  no-padding")
+                                            table(class="table no-margin")
+                                                thead
+                                                    tr
+                                                    th(class="text-uppercase small") Port
+                                                    th(class="text-uppercase text-right small") Type
+                                                tbody
+                                                    each port, porti in val.Ports
+                                                        tr
+                                                            td(class="text-white")=port.PrivatePort
+                                                            td(class='text-uppercase')=port.Type
+                                td(colspan=4)
+                                    div(class="panel panel-default no-padding bg-gray")
+                                        div(class="panel-heading") Mount(s)
+                                        div(class="panel-body  no-padding")
+                                            table(class="table no-margin")
+                                                tbody
+                                                each mount, mounti in val.Mounts
+                                                    -
+                                                        var source =mount.Source.substring(55,0)
+                                                        var dest =mount.Destination.substring(55,0)
+                                                        if(mount.Source.length > 55)
+                                                            source += '...'
+                                                        if(mount.Destination.length > 55)
+                                                            dest += '...'
 
-                    li='ID: ' + val.Id
-                    li='Image: '+val.Image
-                    li='Command: '+val.Command
-                    li='Size: '+val.SizeRootFs/1000000+'MB'
-                    li='Created: '+ new Date(val.Created*1000)
-                    #li='Created: '+ val.Created
-
-                    button(class="slide-down-button uk-button uk-button-warning") Details
-
-                    div(class='slide-down')
-                        h4 Host(s)
-                        each host, hosti in val.HostConfig
-                            li=hosti+'=>'+host
-
-                        each net, neti in val.NetworkSettings.Networks 
-                            b=neti
-                            each n,i in net
-                                li=i+'=>'+n
-                        h4 Port(s)
-                        each port, porti in val.Ports
-                            each val,i in port
-                                li=i+'=>'+val
-                            hr
-                        h4 Mount(s)
-                        each mount, mounti in val.Mounts
-                            each val,i in mount
-                                li=i+'=>'+val
-                            hr
-                        h4 Labels(s)
-                        each label, labeli in val.Labels
-                                li=labeli+'=>'+label
+                                                    tr(class="bg-gray-darker")
+                                                        td(class="text-uppercase small") 
+                                                                strong='Mount ' + (parseInt(mounti) + 1)
+                                                    tr
+                                                        td
+                                                            span(class="small") 
+                                                                strong Source:
+                                                            br
+                                                            span(class="text-white")=source
+                                                    tr
+                                                        td
+                                                            span(class="small") 
+                                                                strong Destination:
+                                                            br
+                                                            span(class="text-white")=dest
+                                                            if mount.RW === true
+                                                                span(class="text-success")=' ['+mount.Mode+']'
+                                                            else
+                                                                span(class="text-danger")=' ['+mount.Mode+']'
+                                td(colspan=2)
+                                    div(class="panel panel-default  no-padding bg-gray")
+                                        div(class="panel-heading") Labels
+                                        div(class="panel-body  no-padding")
+                                            table(class="table no-margin")
+                                                thead
+                                                    tr
+                                                    th(class="text-uppercase small") Description
+                                                    th(class="text-uppercase text-right small") Value
+                                                tbody
+                                                each label, labeli in val.Labels
+                                                    tr
+                                                        -
+                                                            var project=labeli.split('.project')
+                                                            var service=labeli.split('.service')
+                                                            var nr=labeli.split('.container-number')
+                                                            var version=labeli.split('.version')
+                                                        if project.length > 1
+                                                                td Project 
+                                                                td(class="text-white text-right")=label
+                                                        else if service.length > 1
+                                                                td Service 
+                                                                td(class="text-white text-right")=label
+                                                        else if nr.length > 1
+                                                                td Container  
+                                                                td(class="text-white text-right")='#' + label
+                                                        else if version.length > 1
+                                                                td version 
+                                                                td(class="text-white text-right")=label
